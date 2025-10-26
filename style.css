@@ -1,0 +1,30 @@
+.quizz-app__wrapper {
+  background: rgba(144, 238, 144, 0.395);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.carts_wrapper {
+  width: 70%;
+  height: 70%;
+  background-color: green;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  box-sizing: border-box;
+  gap: 24px;
+}
+
+.cart {
+  background: white;
+  flex: 1 1 calc(50% - 24px);
+  height: calc(50% - 24px);
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
