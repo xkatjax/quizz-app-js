@@ -6,7 +6,6 @@ function loadQuestion() {
   const answerButtons = document.querySelectorAll(".quiz-app__answer");
   const current = questions[currentQuestion];
   const progress = document.querySelector("#progress");
-  console.log(currentQuestion);
 
   questionElement.textContent = `${currentQuestion + 1}. ${current.question}`;
 
@@ -38,9 +37,11 @@ function checkAnswer(selectedIndex, button) {
   }
 
   // Zablokuj inne przyciski
-  document
-    .querySelectorAll(".quiz-app__answer")
-    .forEach((btn) => (btn.disabled = true));
+  document.querySelectorAll(".quiz-app__answer").forEach((btnEl) => {
+    if (btnEl !== button) {
+      btnEl.disabled = true;
+    }
+  });
 
   // Pokaż następne pytanie po 1 sekundzie
   setTimeout(() => {
@@ -55,9 +56,11 @@ function checkAnswer(selectedIndex, button) {
 
 function showResult() {
   const wrapper = document.querySelector(".quiz-app");
+  const percentage = (score * 100) / questions.length;
   wrapper.innerHTML = `
     <h2 class="quiz-app__result-title">Koniec quizu!</h2>
     <p class="quiz-app__result-score">Twój wynik: ${score} / ${questions.length}</p>
+    <h3>Poprawnie odpowiedziałeś na ${percentage}%</h3>
   `;
 }
 
