@@ -1,13 +1,14 @@
 let currentQuestion = 0;
 let score = 0;
-console.log(score);
 
 function loadQuestion() {
-  const questionElement = document.querySelector(".quiz-app__question");
+  const questionElement = document.querySelector("#question");
   const answerButtons = document.querySelectorAll(".quiz-app__answer");
   const current = questions[currentQuestion];
+  const progress = document.querySelector("#progress");
+  console.log(currentQuestion);
 
-  questionElement.textContent = current.question;
+  questionElement.textContent = `${currentQuestion + 1}. ${current.question}`;
 
   answerButtons.forEach((button, index) => {
     button.textContent = current.answers[index];
@@ -19,6 +20,10 @@ function loadQuestion() {
 
     button.onclick = () => checkAnswer(index, button);
   });
+
+  progress.textContent = `Pytanie  ${currentQuestion + 1} / ${
+    questions.length
+  }`;
 }
 
 function checkAnswer(selectedIndex, button) {
