@@ -55,3 +55,26 @@ body {
 #progress {
   margin-top: auto;
 }
+
+.quiz-app__result-summary {
+  margin: 5%;
+  background: white;
+  padding: 0 50px 22px;
+  border-radius: 20px;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quiz-app__result-summary-score {
+  color: rgb(255, 107, 47);
+  font-weight: bold;
+}
+
+.divider {
+  width: 100%;
+  border: none;
+  height: 1px;
+  background: lightgrey;
+}
