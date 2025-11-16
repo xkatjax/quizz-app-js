@@ -2,6 +2,19 @@ let currentQuestion = 0;
 let score = 0;
 let answerHistory = [];
 
+const quizInitialHTML = `
+  <div class="quiz-app__wrapper">
+    <h2 id="question" class="quiz-app__question"></h2>
+    <div class="quiz-app__answers">
+      <button class="quiz-app__answer"></button>
+      <button class="quiz-app__answer"></button>
+      <button class="quiz-app__answer"></button>
+      <button class="quiz-app__answer"></button>
+    </div>
+  </div>
+  <h4 id="progress"></h4>
+`;
+
 function loadQuestion() {
   const questionElement = document.querySelector("#question");
   const answerButtons = document.querySelectorAll(".quiz-app__answer");
@@ -66,6 +79,17 @@ function escapeHTML(str) {
   return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+function restartQuiz() {
+  answerHistory = [];
+  currentQuestion = 0;
+  score = 0;
+
+  const wrapper = document.querySelector(".quiz-app");
+  wrapper.innerHTML = quizInitialHTML;
+
+  loadQuestion();
+}
+
 function showResult() {
   const wrapper = document.querySelector(".quiz-app");
   const percentage = Math.round((score * 100) / questions.length);
@@ -73,23 +97,22 @@ function showResult() {
   const resultsList = answerHistory
     .map((entry, index) => {
       return `
-    <li>
+    <li class="summary-item">
     <strong>${entry.question}</strong>
+    </br>
           Twoja odpowiedź: 
             <span style="color:${
               entry.isCorrect ? "rgb(0, 120, 127)" : "rgb(242, 91, 65)"
             };">
               ${escapeHTML(entry.userAnswer)}
             </span></br>
-          Poprawna odpowiedź: <span style="color: rgb(0, 120, 127)"> ${escapeHTML(
+          Poprawna odpowiedź: <span style="color: rgba(148, 148, 148, 1)"> ${escapeHTML(
             entry.correctAnswer
           )}</span>
     </li>
     `;
     })
     .join("");
-
-  console.log(resultsList);
 
   wrapper.innerHTML = `
   <div class="quiz-app__result-summary">
@@ -102,9 +125,14 @@ function showResult() {
       <ol> 
         ${resultsList}
       </ol>
-      </div>
+    </div>
+    <button class="quiz-app__result-restart">Rozwiąż ponownie</button>
   </div>
   `;
+
+  document
+    .querySelector(".quiz-app__result-restart")
+    .addEventListener("click", restartQuiz);
 }
 
 loadQuestion();
