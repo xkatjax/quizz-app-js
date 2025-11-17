@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>quiz-app-js</title>
     <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://kit.fontawesome.com/665c64cd6b.js"
       crossorigin="anonymous"
@@ -13,16 +16,34 @@
   </head>
   <body>
     <div class="quiz-app">
-      <div class="quiz-app__wrapper">
-        <h2 id="question" class="quiz-app__question"></h2>
-        <div class="quiz-app__answers">
-          <button class="quiz-app__answer"></button>
-          <button class="quiz-app__answer"></button>
-          <button class="quiz-app__answer"></button>
-          <button class="quiz-app__answer"></button>
+      <!-- QUIZ SCREEN -->
+      <div id="quiz-screen" class="quiz-app">
+        <div class="quiz-app__wrapper">
+          <h2 id="question" class="quiz-app__question"></h2>
+          <div class="quiz-app__answers">
+            <button class="quiz-app__answer"></button>
+            <button class="quiz-app__answer"></button>
+            <button class="quiz-app__answer"></button>
+            <button class="quiz-app__answer"></button>
+          </div>
+        </div>
+        <h4 id="progress"></h4>
+      </div>
+
+      <!-- RESULT SCREEN -->
+      <div id="result-screen" class="hidden">
+        <div class="quiz-app__result-summary">
+          <h2>Koniec quizu!</h2>
+          <p id="result-score"></p>
+          <h3 id="result-percentage"></h3>
+          <hr class="divider" />
+          <h4>Podsumowanie:</h4>
+          <ol id="result-list"></ol>
+          <button id="restart-btn" class="quiz-app__result-restart">
+            Rozwiąż ponownie
+          </button>
         </div>
       </div>
-      <h4 id="progress"></h4>
     </div>
 
     <script src="./data/questions.js"></script>

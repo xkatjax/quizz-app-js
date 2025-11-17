@@ -2,18 +2,8 @@ let currentQuestion = 0;
 let score = 0;
 let answerHistory = [];
 
-const quizInitialHTML = `
-  <div class="quiz-app__wrapper">
-    <h2 id="question" class="quiz-app__question"></h2>
-    <div class="quiz-app__answers">
-      <button class="quiz-app__answer"></button>
-      <button class="quiz-app__answer"></button>
-      <button class="quiz-app__answer"></button>
-      <button class="quiz-app__answer"></button>
-    </div>
-  </div>
-  <h4 id="progress"></h4>
-`;
+const quizScreen = document.getElementById("quiz-screen");
+const resultScreen = document.getElementById("result-screen");
 
 function loadQuestion() {
   const questionElement = document.querySelector("#question");
@@ -23,20 +13,17 @@ function loadQuestion() {
 
   questionElement.textContent = `${currentQuestion + 1}. ${current.question}`;
 
-  answerButtons.forEach((button, index) => {
-    button.textContent = current.answers[index];
-    button.classList.remove(
+  answerButtons.forEach((btn, index) => {
+    btn.textContent = current.answers[index];
+    btn.classList.remove(
       "quiz-app__answer--correct",
       "quiz-app__answer--wrong"
     );
-    button.disabled = false;
-
-    button.onclick = () => checkAnswer(index, button);
+    btn.disabled = false;
+    btn.onclick = () => checkAnswer(index, btn);
   });
 
-  progress.textContent = `Pytanie  ${currentQuestion + 1} / ${
-    questions.length
-  }`;
+  progress.textContent = `Pytanie ${currentQuestion + 1} / ${questions.length}`;
 }
 
 function checkAnswer(selectedIndex, button) {
@@ -47,7 +34,7 @@ function checkAnswer(selectedIndex, button) {
     question: current.question,
     correctAnswer: current.answers[current.correct],
     userAnswer: current.answers[selectedIndex],
-    isCorrect: isCorrect,
+    isCorrect,
   });
 
   if (isCorrect) {
@@ -57,82 +44,66 @@ function checkAnswer(selectedIndex, button) {
     button.classList.add("quiz-app__answer--wrong");
   }
 
-  // Zablokuj inne przyciski
-  document.querySelectorAll(".quiz-app__answer").forEach((btnEl) => {
-    if (btnEl !== button) {
-      btnEl.disabled = true;
-    }
+  document.querySelectorAll(".quiz-app__answer").forEach((btn) => {
+    if (btn !== button) btn.disabled = true;
   });
 
-  // Pokaż następne pytanie po 1 sekundzie
   setTimeout(() => {
     currentQuestion++;
-    if (currentQuestion < questions.length) {
-      loadQuestion();
-    } else {
-      showResult();
-    }
+    currentQuestion < questions.length ? loadQuestion() : showResult();
   }, 1000);
 }
 
-function escapeHTML(str) {
-  return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function showResult() {
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.remove("hidden");
+
+  document.getElementById(
+    "result-score"
+  ).textContent = `Twój wynik: ${score} / ${questions.length}`;
+
+  const percentage = Math.round((score * 100) / questions.length);
+  document.getElementById(
+    "result-percentage"
+  ).textContent = `Poprawnie odpowiedziałeś na ${percentage}%`;
+
+  const list = document.getElementById("result-list");
+  list.innerHTML = answerHistory
+    .map(
+      (entry) => `
+      <li>
+        <strong>${entry.question}</strong><br>
+        Twoja odpowiedź:
+        <span style="color:${
+          entry.isCorrect ? "rgb(0,120,127)" : "rgb(242,91,65)"
+        };">
+          ${escapeHTML(entry.userAnswer)}
+        </span><br>
+        Poprawna odpowiedź:
+        <span style="color:rgb(148,148,148);">
+          ${escapeHTML(entry.correctAnswer)}
+        </span>
+      </li>
+    `
+    )
+    .join("");
 }
 
 function restartQuiz() {
-  answerHistory = [];
   currentQuestion = 0;
   score = 0;
+  answerHistory = [];
 
-  const wrapper = document.querySelector(".quiz-app");
-  wrapper.innerHTML = quizInitialHTML;
+  resultScreen.classList.add("hidden");
+  quizScreen.classList.remove("hidden");
 
   loadQuestion();
 }
 
-function showResult() {
-  const wrapper = document.querySelector(".quiz-app");
-  const percentage = Math.round((score * 100) / questions.length);
+document.getElementById("restart-btn").addEventListener("click", restartQuiz);
 
-  const resultsList = answerHistory
-    .map((entry, index) => {
-      return `
-    <li class="summary-item">
-    <strong>${entry.question}</strong>
-    </br>
-          Twoja odpowiedź: 
-            <span style="color:${
-              entry.isCorrect ? "rgb(0, 120, 127)" : "rgb(242, 91, 65)"
-            };">
-              ${escapeHTML(entry.userAnswer)}
-            </span></br>
-          Poprawna odpowiedź: <span style="color: rgba(148, 148, 148, 1)"> ${escapeHTML(
-            entry.correctAnswer
-          )}</span>
-    </li>
-    `;
-    })
-    .join("");
-
-  wrapper.innerHTML = `
-  <div class="quiz-app__result-summary">
-    <h2 class="quiz-app__result-title">Koniec quizu!</h2>
-    <p class="quiz-app__result-summary-score">Twój wynik: ${score} / ${questions.length}</p>
-    <h3>Poprawnie odpowiedziałeś na ${percentage}%</h3>
-    <hr class="divider" />
-    <div>
-      <h4>Podsumowanie:</h4>
-      <ol> 
-        ${resultsList}
-      </ol>
-    </div>
-    <button class="quiz-app__result-restart">Rozwiąż ponownie</button>
-  </div>
-  `;
-
-  document
-    .querySelector(".quiz-app__result-restart")
-    .addEventListener("click", restartQuiz);
+function escapeHTML(str) {
+  return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 loadQuestion();
